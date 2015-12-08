@@ -23,7 +23,7 @@ package main
 
 import (
   dns "github.com/Focinfi/go-dns-resolver"
-  "log"
+  "fmt"
 )
 
 func main() {
@@ -34,9 +34,9 @@ func main() {
   resolver := NewResolver(target, server, config)
 
   if res, err := resolver.Lookup(TypeCNAME); err == nil {
-    t.Log(res)
+    fmt.Println(res)
   } else {
-    t.Error(err)
+    fmt.Println(err)
   }
 }
 ```
