@@ -1,6 +1,10 @@
 package resolver
 
+import (
+	"time"
+)
+
 type Config struct {
-	Timeout    uint
+	Timeout    time.Duration
 	RetryTimes uint
 }

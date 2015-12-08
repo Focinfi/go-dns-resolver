@@ -17,17 +17,17 @@ const (
 
 func (q QueryType) String() (queryTypeS string) {
 	switch q {
-	case QueryType(dns.TypeA):
+	case TypeA:
 		queryTypeS = "A"
-	case QueryType(dns.TypeNS):
+	case TypeNS:
 		queryTypeS = "NS"
-	case QueryType(dns.TypeMX):
+	case TypeMX:
 		queryTypeS = "MX"
-	case QueryType(dns.TypeSOA):
+	case TypeSOA:
 		queryTypeS = "SOA"
-	case QueryType(dns.TypeCNAME):
+	case TypeCNAME:
 		queryTypeS = "CNAME"
-	case QueryType(dns.TypeTXT):
+	case TypeTXT:
 		queryTypeS = "TXT"
 	default:
 		queryTypeS = "Unsportted Type"

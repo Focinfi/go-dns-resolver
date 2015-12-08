@@ -5,14 +5,12 @@ import (
 	"time"
 )
 
-func TestResovler(t *testing.T) {
-	target := "f.focinfi.wang"
-	server := "119.29.29.29"
-	config := Config{Timeout: uint(time.Second), RetryTimes: uint(3)}
-	resolver := NewResolver(target, server, config)
+var resolver = NewResolver("focinfi.wang", "119.29.29.29", Config{Timeout: time.Second, RetryTimes: uint(3)})
 
-	if res, err := resolver.Lookup(TypeCNAME); err == nil {
-		t.Log(res)
+func TestResovler(t *testing.T) {
+	if res, err := resolver.Lookup(TypeNS); err == nil {
+		res1 := res[0]
+		t.Log(res1)
 	} else {
 		t.Error(err)
 	}

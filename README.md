@@ -23,20 +23,21 @@ package main
 
 import (
   dns "github.com/Focinfi/go-dns-resolver"
-  "fmt"
+  "log"
 )
 
 func main() {
   target := "f.focinfi.wang"
   server := "119.29.29.29"
   // set Timeout is 1 second and retry 3 times if failed
-  config := Config{Timeout: uint(time.Second), RetryTimes: uint(3)}
+  config := Config{Timeout: time.Second, RetryTimes: uint(3)}
   resolver := NewResolver(target, server, config)
 
   if res, err := resolver.Lookup(TypeCNAME); err == nil {
-    fmt.Println(res)
+    // res is a array of ResultItem
+    log.Log(res.Record, res.Type, res.Ttl, res.Priority, res.Content)
   } else {
-    fmt.Println(err)
+    log.Error(err)
   }
 }
 ```

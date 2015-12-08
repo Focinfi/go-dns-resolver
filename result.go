@@ -1,13 +1,52 @@
 package resolver
 
 import (
+	"github.com/miekg/dns"
+	"strings"
 	"time"
 )
 
-type Result struct {
+type ResultItem struct {
 	Record   string
-	Type     QueryType
-	TTL      time.Duration
-	Priority uint
+	Type     string
+	Ttl      time.Duration
+	Priority uint16
 	Content  string
+}
+
+func (resultItem *ResultItem) setTtl(rr dns.RR_Header) {
+	resultItem.Ttl = time.Duration(time.Second * time.Duration(rr.Ttl))
+}
+
+func NewResultItemWithDnsRP(queryType QueryType, answer dns.RR) (resultItem *ResultItem) {
+	resultItem = &ResultItem{Type: queryType.String()}
+	switch queryType {
+	case TypeA:
+		if a, ok := answer.(*dns.A); ok {
+			resultItem.setTtl(a.Hdr)
+			resultItem.Content = a.A.String()
+		}
+	case TypeCNAME:
+		if cname, ok := answer.(*dns.CNAME); ok {
+			resultItem.setTtl(cname.Hdr)
+			resultItem.Content = cname.Target
+		}
+	case TypeMX:
+		if mx, ok := answer.(*dns.MX); ok {
+			resultItem.setTtl(mx.Hdr)
+			resultItem.Content = mx.Mx
+			resultItem.Priority = mx.Preference
+		}
+	case TypeNS:
+		if ns, ok := answer.(*dns.NS); ok {
+			resultItem.setTtl(ns.Hdr)
+			resultItem.Content = ns.Ns
+		}
+	case TypeTXT:
+		if txt, ok := answer.(*dns.TXT); ok {
+			resultItem.setTtl(txt.Hdr)
+			resultItem.Content = strings.Join(txt.Txt, " ")
+		}
+	}
+	return
 }
