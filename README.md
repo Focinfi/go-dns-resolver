@@ -1,4 +1,4 @@
-# go-dns-resovler
+# go-dns-resolver
 
 DNS resolver in Golang, based on [miekg/dns](github.com/miekg/dns).
 
@@ -9,27 +9,34 @@ DNS resolver in Golang, based on [miekg/dns](github.com/miekg/dns).
 3. Easy to figure
 4. High performance
 
+### Install
+```shell
+go get github.com/Focinfi/go-dns-resolver
+```
+
+you can get this package using `resolver`.
+
 ### Example
 
 ```go
 package main
 
 import (
-  dns "github.com/Focinfi/go-dns-resovler"
+  dns "github.com/Focinfi/go-dns-resolver"
   "log"
 )
 
 func main() {
   target := "f.focinfi.wang"
   server := "119.29.29.29"
-  config := map[string]interface{}{}
-  config["timeout"] = uint(1)
+  // set Timeout is 1 second and retry 3 times if failed
+  config := Config{Timeout: uint(time.Second), RetryTimes: uint(3)}
+  resolver := NewResolver(target, server, config)
 
-  resolver := dns.NewResolver(target, server, config)
-  if res, err := resolver.Lookup(dns.TypeCNAME); err == nil {
-    log.Println(res)
+  if res, err := resolver.Lookup(TypeCNAME); err == nil {
+    t.Log(res)
   } else {
-    log.Fatal(err)
+    t.Error(err)
   }
 }
 ```
