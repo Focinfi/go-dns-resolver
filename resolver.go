@@ -34,7 +34,6 @@ func (resolver *Resolver) Lookup(queryType QueryType) (results []*ResultItem, er
 		if len(ans) == 0 {
 			errors = fmt.Errorf("No %v result", queryType.String())
 		} else {
-			fmt.Println(len(res.Answer))
 			for _, answer := range res.Answer {
 				result := NewResultItemWithDnsRP(queryType, answer)
 				result.Record = resolver.Target
