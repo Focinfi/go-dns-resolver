@@ -1,7 +1,6 @@
 package resolver
 
 import (
-	"fmt"
 	"github.com/miekg/dns"
 )
 
@@ -53,25 +52,18 @@ func GoExchange(target string, server string, queryType QueryType, resultsChan c
 	resultsChan <- res
 }
 
-func Exchange(target string, server string, queryType QueryType) (results []*ResultItem, errors error) {
-	results = []*ResultItem{}
+func Exchange(target string, server string, queryType QueryType) ([]*ResultItem, error) {
+	results := []*ResultItem{}
 	msg := &dns.Msg{}
 	msg.SetQuestion(target+".", uint16(queryType))
 	client := &dns.Client{DialTimeout: Config.Timeout}
 	res, _, err := client.Exchange(msg, server)
-	if err != nil {
-		errors = err
-	} else {
-		ans := res.Answer
-		if len(ans) == 0 {
-			errors = fmt.Errorf("No %v result", queryType.String())
-		} else {
-			for _, answer := range res.Answer {
-				result := NewResultItemWithDnsRP(queryType, answer)
-				result.Record = target
-				results = append(results, result)
-			}
+	if err == nil && len(res.Answer) > 0 {
+		for _, answer := range res.Answer {
+			result := NewResultItemWithDnsRP(queryType, answer)
+			result.Record = target
+			results = append(results, result)
 		}
 	}
-	return
+	return results, err
 }
