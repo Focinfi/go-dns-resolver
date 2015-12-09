@@ -1,6 +1,6 @@
 # go-dns-resolver
 
-DNS resolver in Golang, based on [miekg/dns](github.com/miekg/dns).
+DNS resolver in Golang, based on [miekg/dns](https://github.com/miekg/dns).
 
 ### Goal
 
