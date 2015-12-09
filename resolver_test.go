@@ -6,9 +6,9 @@ import (
 
 func TestLookup(t *testing.T) {
 	var resolver = NewResolver("119.29.29.29")
-	SetTimeout(uint(2))
+	Config.SetTimeout(uint(2))
 
-	resolver.Targets("youtube.com").Types(TypeA)
+	resolver.Targets("google.com").Types(TypeA, TypeMX)
 	res := resolver.Lookup()
 	for target := range res.ResMap {
 		t.Logf("%v: ", target)

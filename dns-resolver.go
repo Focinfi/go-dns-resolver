@@ -5,9 +5,6 @@ import (
 	"github.com/miekg/dns"
 )
 
-var Client = &dns.Client{}
-var Msg = &dns.Msg{}
-
 type Resolver struct {
 	Server string
 	Query  *Query
@@ -57,7 +54,8 @@ func Exchange(target string, server string, queryType QueryType) (results []*Res
 	results = []*ResultItem{}
 	msg := &dns.Msg{}
 	msg.SetQuestion(target+".", uint16(queryType))
-	res, _, err := Client.Exchange(msg, server)
+	client := &dns.Client{DialTimeout: Config.Timeout}
+	res, _, err := client.Exchange(msg, server)
 	if err != nil {
 		errors = err
 	} else {

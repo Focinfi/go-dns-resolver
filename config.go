@@ -5,11 +5,12 @@ import (
 )
 
 type Configuration struct {
+	Timeout    time.Duration
 	RetryTimes uint
 }
 
-var Config = Configuration{RetryTimes: uint(0)}
-
-func SetTimeout(seconds uint) {
-	Client.DialTimeout = time.Second * time.Duration(seconds)
+func (c *Configuration) SetTimeout(seconds uint) {
+	c.Timeout = time.Second * time.Duration(seconds)
 }
+
+var Config = Configuration{Timeout: time.Second * time.Duration(2), RetryTimes: uint(0)}
