@@ -35,7 +35,7 @@ func main() {
   resolver := dns.NewResolver(target, server, config)
 
   if res, err := resolver.Lookup(dns.TypeCNAME); err == nil {
-    // res is a array of ResultItem
+    // res is a array of *ResultItem
     for _, r := range res {
       log.Println(r.Record, r.Type, r.Ttl, r.Priority, r.Content)
     }

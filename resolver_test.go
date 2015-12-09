@@ -2,16 +2,28 @@ package resolver
 
 import (
 	"testing"
-	"time"
 )
 
-var resolver = NewResolver("focinfi.wang", "119.29.29.29", Config{Timeout: time.Second, RetryTimes: uint(3)})
+func TestLookup(t *testing.T) {
+	var resolver = NewResolver("119.29.29.29")
+	SetTimeout(uint(2))
 
-func TestResovler(t *testing.T) {
-	if res, err := resolver.Lookup(TypeNS); err == nil {
-		res1 := res[0]
-		t.Log(res1)
-	} else {
-		t.Error(err)
+	resolver.Targets("youtube.com").Types(TypeA)
+	res := resolver.Lookup()
+	for target := range res.ResMap {
+		t.Logf("%v: ", target)
+		for _, r := range res.ResMap[target] {
+			if r != nil {
+				t.Log(r.Record, r.Type, r.Ttl, r.Priority, r.Content)
+			}
+		}
+	}
+}
+
+func BenchmarkLookup(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		var resolver = NewResolver("119.29.29.29")
+		resolver.Targets("youtube.com", "google.com", "twitter.com", "baidu.com").Types(TypeA, TypeMX, TypeTXT)
+		resolver.Lookup()
 	}
 }

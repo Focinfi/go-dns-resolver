@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+type Result struct {
+	Server string
+	ResMap map[string][]*ResultItem
+}
+
 type ResultItem struct {
 	Record   string
 	Type     string
