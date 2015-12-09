@@ -28,8 +28,10 @@ func main() {
   domains := []string{"google.com", "twitter.com"}
   types := []dns.QueryType{dns.TypeA, dns.TypeNS, dns.TypeMX, dns.TypeTXT}
 
-  // Set timeout
+  // Set timeout and retry times
   dns.Config.SetTimeout(uint(2))
+  dns.Config.RetryTimes = uint(4)
+
 
   // Create and setup resolver with domains and types
   resolver := dns.NewResolver("119.29.29.29")
@@ -75,6 +77,5 @@ google.com MX 10m0s 30 alt2.aspmx.l.google.com.
 
 ### Todo
 
-1. Support Config.RetryTimes
-2. Support more DNS record types
+1. Support more DNS record types
 

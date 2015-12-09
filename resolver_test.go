@@ -7,6 +7,7 @@ import (
 func TestLookup(t *testing.T) {
 	var resolver = NewResolver("119.29.29.29")
 	Config.SetTimeout(uint(2))
+	Config.RetryTimes = uint(4)
 
 	resolver.Targets("google.com").Types(TypeA, TypeMX)
 	res := resolver.Lookup()

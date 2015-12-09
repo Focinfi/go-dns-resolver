@@ -43,11 +43,14 @@ func (r *Resolver) Lookup() *Result {
 }
 
 func GoExchange(target string, server string, queryType QueryType, resultsChan chan []*ResultItem) {
-	if results, err := Exchange(target, server, queryType); err == nil {
-		resultsChan <- results
-	} else {
-		resultsChan <- []*ResultItem{}
+	var res = []*ResultItem{}
+	for i := -1; i < int(Config.RetryTimes); i++ {
+		if results, err := Exchange(target, server, queryType); err == nil {
+			res = results
+			break
+		}
 	}
+	resultsChan <- res
 }
 
 func Exchange(target string, server string, queryType QueryType) (results []*ResultItem, errors error) {
