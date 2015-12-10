@@ -41,7 +41,6 @@ func main() {
     log.Fatal(err)
   }
 
-
   // Create and setup resolver with domains and types
   resolver := dns.NewResolver("119.29.29.29")
   resolver.Targets(domains...).Types(types...)
@@ -59,8 +58,10 @@ func main() {
 
 ```
 
-Output is:
+Output:
 ``` shell
+google.com A 2m31s 0 216.58.197.110
+
 twitter.com: 
 twitter.com A 10m3s 0 78.16.49.15
 twitter.com NS 11h49m58s 0 ns1.p34.dynect.net.
