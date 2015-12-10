@@ -27,7 +27,7 @@ func (r *Resolver) Lookup() *Result {
 	for _, queryItem := range r.Query.Items {
 		target := queryItem.Target
 		for _, t := range queryItem.Types {
-			go GoExchange(target, r.Server, t, resultsChan)
+			go goExchange(target, r.Server, t, resultsChan)
 		}
 	}
 
@@ -41,7 +41,7 @@ func (r *Resolver) Lookup() *Result {
 	return &result
 }
 
-func GoExchange(target string, server string, queryType QueryType, resultsChan chan []*ResultItem) {
+func goExchange(target string, server string, queryType QueryType, resultsChan chan []*ResultItem) {
 	var res = []*ResultItem{}
 	for i := -1; i < int(Config.RetryTimes); i++ {
 		if results, err := Exchange(target, server, queryType); err == nil {
@@ -60,7 +60,7 @@ func Exchange(target string, server string, queryType QueryType) ([]*ResultItem,
 	res, _, err := client.Exchange(msg, server)
 	if err == nil && len(res.Answer) > 0 {
 		for _, answer := range res.Answer {
-			result := NewResultItemWithDnsRP(queryType, answer)
+			result := NewResultItemWithDnsRR(queryType, answer)
 			result.Record = target
 			results = append(results, result)
 		}

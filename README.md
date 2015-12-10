@@ -32,6 +32,15 @@ func main() {
   dns.Config.SetTimeout(uint(2))
   dns.Config.RetryTimes = uint(4)
 
+  // Simple usage
+  if results, err := dns.Exchange("google.com", ""119.29.29.29", typeA); err == nil {
+    for _, r := range results {
+      log.Println(r.Record, r.Type, r.Ttl, r.Priority, r.Content)
+    }
+  } else {
+    log.Fatal(err)
+  }
+
 
   // Create and setup resolver with domains and types
   resolver := dns.NewResolver("119.29.29.29")
@@ -39,13 +48,11 @@ func main() {
   // Lookup
   res := resolver.Lookup()
 
-  //res is a map[string]*ResultItem, key is the domain
+  //res.ResMap is a map[string]*ResultItem, key is the domain
   for target := range res.ResMap {
     log.Printf("%v: \n", target)
     for _, r := range res.ResMap[target] {
-      if r != nil {
-        log.Println(r.Record, r.Type, r.Ttl, r.Priority, r.Content)
-      }
+      log.Println(r.Record, r.Type, r.Ttl, r.Priority, r.Content)
     }
   }
 }

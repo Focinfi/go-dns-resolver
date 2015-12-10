@@ -23,7 +23,7 @@ func (resultItem *ResultItem) setTtl(rr dns.RR_Header) {
 	resultItem.Ttl = time.Duration(time.Second * time.Duration(rr.Ttl))
 }
 
-func NewResultItemWithDnsRP(queryType QueryType, answer dns.RR) (resultItem *ResultItem) {
+func NewResultItemWithDnsRR(queryType QueryType, answer dns.RR) (resultItem *ResultItem) {
 	resultItem = &ResultItem{Type: queryType.String()}
 	switch queryType {
 	case TypeA:
