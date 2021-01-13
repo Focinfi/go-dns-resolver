@@ -9,7 +9,7 @@ func TestLookup(t *testing.T) {
 	Config.SetTimeout(uint(2))
 	Config.RetryTimes = uint(4)
 
-	resolver.Targets("google.com").Types(TypeA, TypeMX)
+	resolver.Targets("www.google.com").Types(TypeA, TypeAAAA, TypeMX)
 	res := resolver.Lookup()
 	for target := range res.ResMap {
 		t.Logf("%v: ", target)
@@ -24,7 +24,7 @@ func TestLookup(t *testing.T) {
 func BenchmarkLookup(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		var resolver = NewResolver("119.29.29.29")
-		resolver.Targets("youtube.com", "google.com", "twitter.com", "baidu.com").Types(TypeA, TypeMX, TypeTXT)
+		resolver.Targets("youtube.com", "google.com", "twitter.com", "baidu.com").Types(TypeA, TypeAAAA, TypeMX, TypeTXT)
 		resolver.Lookup()
 	}
 }

@@ -8,6 +8,7 @@ type QueryType uint16
 
 const (
 	TypeA     = QueryType(dns.TypeA)
+	TypeAAAA  = QueryType(dns.TypeAAAA)
 	TypeNS    = QueryType(dns.TypeNS)
 	TypeMX    = QueryType(dns.TypeMX)
 	TypeSOA   = QueryType(dns.TypeSOA)
@@ -15,22 +16,23 @@ const (
 	TypeTXT   = QueryType(dns.TypeTXT)
 )
 
-func (q QueryType) String() (queryTypeS string) {
+func (q QueryType) String() string {
 	switch q {
 	case TypeA:
-		queryTypeS = "A"
+		return "A"
+	case TypeAAAA:
+		return "AAAA"
 	case TypeNS:
-		queryTypeS = "NS"
+		return "NS"
 	case TypeMX:
-		queryTypeS = "MX"
+		return "MX"
 	case TypeSOA:
-		queryTypeS = "SOA"
+		return "SOA"
 	case TypeCNAME:
-		queryTypeS = "CNAME"
+		return "CNAME"
 	case TypeTXT:
-		queryTypeS = "TXT"
+		return "TXT"
 	default:
-		queryTypeS = "Unsportted Type"
+		return "Unknown Type"
 	}
-	return
 }

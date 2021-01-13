@@ -24,9 +24,9 @@ func (query *Query) Types(types ...QueryType) *Query {
 	return query
 }
 
-func (q *Query) Count() int {
-	if len(q.Items) == 0 {
+func (query *Query) Count() int {
+	if len(query.Items) == 0 {
 		return 0
 	}
-	return len(q.Items) * len(q.Items[0].Types)
+	return len(query.Items) * len(query.Items[0].Types)
 }

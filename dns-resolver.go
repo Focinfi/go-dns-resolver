@@ -1,6 +1,8 @@
 package resolver
 
 import (
+	"sync"
+
 	"github.com/miekg/dns"
 )
 
@@ -24,15 +26,22 @@ func (r *Resolver) Lookup() *Result {
 	result := Result{Server: r.Server, ResMap: map[string][]*ResultItem{}}
 
 	resultsChan := make(chan []*ResultItem, r.Query.Count())
+	var wg sync.WaitGroup
 	for _, queryItem := range r.Query.Items {
 		target := queryItem.Target
 		for _, t := range queryItem.Types {
-			go goExchange(target, r.Server, t, resultsChan)
+			wg.Add(1)
+			go func(queryType QueryType) {
+				defer wg.Done()
+				goExchange(target, r.Server, queryType, resultsChan)
+			}(t)
 		}
 	}
 
-	for i := 0; i < r.Query.Count(); i++ {
-		res := <-resultsChan
+	wg.Wait()
+	close(resultsChan)
+
+	for res := range resultsChan {
 		if len(res) > 0 {
 			target := res[0].Record
 			result.ResMap[target] = append(result.ResMap[target], res...)
@@ -42,18 +51,16 @@ func (r *Resolver) Lookup() *Result {
 }
 
 func goExchange(target string, server string, queryType QueryType, resultsChan chan []*ResultItem) {
-	var res = []*ResultItem{}
 	for i := -1; i < int(Config.RetryTimes); i++ {
 		if results, err := Exchange(target, server, queryType); err == nil {
-			res = results
-			break
+			resultsChan <- results
+			return
 		}
 	}
-	resultsChan <- res
 }
 
 func Exchange(target string, server string, queryType QueryType) ([]*ResultItem, error) {
-	results := []*ResultItem{}
+	var results []*ResultItem
 	msg := &dns.Msg{}
 	msg.SetQuestion(target+".", uint16(queryType))
 	client := &dns.Client{DialTimeout: Config.Timeout}
